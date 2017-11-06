@@ -3,6 +3,12 @@ authors = ["Vivek Kushwaha <yoursvivek@gmail.com>"]
 license = "MIT"
 name = "imdb"
 version = "0.0.1"
+description = "imdb is a library to retrieve information from IMDb"
+homepage = "https://github.com/yoursvivek/imdb"
+repository = "https://github.com/yoursvivek/imdb"
+readme = "README.md"
+keywords = ["imdb", "scraping", "movies"]
+
 
 [dependencies]
 derive_builder = "0.5.0"

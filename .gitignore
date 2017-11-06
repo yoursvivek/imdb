@@ -1,3 +1,4 @@
 /target/
+fixtures/*
 **/*.rs.bk
 Cargo.lock
