@@ -1,13 +1,12 @@
 use url::Url;
 use reqwest;
-use std::io::Read;
-use hyper::header::{Headers, UserAgent, AcceptLanguage};
+use hyper::header::{HeaderMap, ACCEPT_LANGUAGE, USER_AGENT};
 
-use consts;
-use parser::top250;
-use error::Error;
-use models::Movie;
-use language::Language;
+use crate::consts;
+use crate::parser::top250;
+use crate::error::Error;
+use crate::models::Movie;
+use crate::language::Language;
 
 /// Client to retrieve information from IMDb.
 
@@ -15,9 +14,9 @@ pub struct IMDb {
     /// Reqwest client
     client: reqwest::Client,
     /// Language
-    lang: Option<AcceptLanguage>,
+    lang: Option<String>,
     /// User-Agent
-    ua: Option<UserAgent>,
+    ua: Option<String>,
 }
 
 impl Default for IMDb {
@@ -43,42 +42,35 @@ impl IMDb {
     }
 
     /// Sets _User-Agent_ for HTTP requests.
-    pub fn user_agent(&mut self, ua: UserAgent) -> &mut Self {
+    pub fn user_agent(&mut self, ua: String) -> &mut Self {
         self.ua = Some(ua);
         self
     }
 
     /// Makes HTTP requests.
-    fn get(&self, path: &str) -> Result<reqwest::Response, Error> {
+    async fn get(&self, path: &str) -> Result<reqwest::Response, Error> {
         let base = Url::parse(consts::BASE_URL).unwrap();
         let url = base.join(path).unwrap();
 
-        let mut headers = Headers::new();
-
-        if let Some(ref lang) = self.lang {
-            headers.set(lang.clone());
+        let mut headers = HeaderMap::new();
+        if let Some(lang) = &self.lang {
+            headers.insert(ACCEPT_LANGUAGE,lang.clone().parse().unwrap());
         }
-
-        if let Some(ref ua) = self.ua {
-            headers.set(ua.clone());
+        if let Some(ua) = &self.ua {
+            headers.insert(USER_AGENT,ua.clone().parse().unwrap());
         }
 
         info!("Sending HTTP request for `{}`.", url);
-        self.client.get(url).headers(headers).send().map_err(
+        self.client.get(url).headers(headers).send().await.map_err(
             Error::ReqwestError,
         )
     }
 
     /// Get _Top 250 Movies_.
-    pub fn top250_movies(&self) -> Result<Vec<Movie>, Error> {
-
-        let mut response = self.get("chart/top")?;
-
-        let mut html = String::with_capacity(800 * 1024);
-        response.read_to_string(&mut html).map_err(Error::IOError)?;
-
+    pub async fn top250_movies(&self) -> Result<Vec<Movie>, Error> {
+        let mut response = self.get("chart/top").await?;
+        let mut html = response.text().await.map_err(Error::ReqwestError)?;
         let movies = top250::parse_top250_movies_html(&html);
-
         Ok(movies)
     }
 }

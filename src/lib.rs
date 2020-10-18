@@ -17,12 +17,12 @@ extern crate log;
 
 #[macro_use]
 extern crate derive_builder;
-extern crate hyper;
+// extern crate hyper;
 #[macro_use]
 extern crate language_tags;
-extern crate reqwest;
-extern crate scraper;
-extern crate url;
+// extern crate reqwest;
+// extern crate scraper;
+// extern crate url;
 
 #[cfg(feature = "serde-impls")]
 #[macro_use]
@@ -63,6 +63,6 @@ pub mod unstable {
     pub mod parser {
         //! Parsers for extracting information from IMDb html pages.
 
-        pub use parser::top250;
+        pub use crate::parser::top250;
     }
 }
