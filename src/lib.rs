@@ -41,8 +41,8 @@ pub mod models;
 
 pub use error::Error;
 pub use language::Language;
-pub use imdb::IMDb;
 pub use models::Movie;
+pub use self::imdb::IMDb;
 
 pub mod unstable {
     //! Unstable Internal APIs.
