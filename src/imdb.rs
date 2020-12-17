@@ -68,8 +68,8 @@ impl IMDb {
 
     /// Get _Top 250 Movies_.
     pub async fn top250_movies(&self) -> Result<Vec<Movie>, Error> {
-        let mut response = self.get("chart/top").await?;
-        let mut html = response.text().await.map_err(Error::ReqwestError)?;
+        let response = self.get("chart/top").await?;
+        let html = response.text().await.map_err(Error::ReqwestError)?;
         let movies = top250::parse_top250_movies_html(&html);
         Ok(movies)
     }

@@ -19,7 +19,7 @@ pub struct TitleID(pub u32);
 
 impl fmt::Display for TitleID {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "tt{:07}", self.0)
+        write!(f, "tt{:08}", self.0)
     }
 }
 

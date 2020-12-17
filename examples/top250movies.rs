@@ -10,8 +10,6 @@ use std::io::Read;
 use std::fs::File;
 use std::iter::Iterator;
 
-use futures::executor::block_on;
-
 use terminal_size::{Width, Height, terminal_size};
 use colored::*;
 
@@ -21,8 +19,8 @@ use crate::imdb::{Movie, Language};
 fn print_one_line(movies: &[Movie], max_title_length: usize) {
     for (i, movie) in movies.iter().enumerate() {
         println!("[{}] {} {} ({}) {} {} votes",
-            format!("{}", movie.id),
-            format!("{:3}", i+1).white(),
+            format!("{}", movie.id).white(),
+            format!("{:3}", i+1),
             format!("{:width$}", movie.title.blue(), width=max_title_length),
             format!("{}", movie.year).yellow(),
             format!("{:.1}", movie.rating).green(),
@@ -43,13 +41,13 @@ fn print_two_lines(movies: &[Movie], max_title_length: usize) {
                     format!("{}", movie.id),
                     format!("{:.1}", movie.rating).green(),
                     format!("{:7}", movie.votes).cyan(),
-                    width = max_title_length - 15,
+                    width = max_title_length - 16,
             ).on_black(),
         );
     }
 }
-
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
 
     let args: Vec<String> = ::std::env::args().collect();
@@ -65,8 +63,8 @@ fn main() {
         }
         _ => {
             let mut imdb = imdb::IMDb::new();
-            imdb.accept_language(Language::da_DK);
-            block_on(imdb.top250_movies()).unwrap()
+            imdb.accept_language(Language::en_GB);
+            imdb.top250_movies().await.unwrap()
         }
     };
 
@@ -98,4 +96,5 @@ fn main() {
     } else {
         warn!("No movies found. Something horribly wrong is going on!");
     }
+    Ok(())
 }
