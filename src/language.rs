@@ -1,4 +1,3 @@
-use hyper::header::{AcceptLanguage, qitem};
 use std::fmt;
 
 /// Options for IMDb language support via _Accept-Language_
@@ -63,7 +62,7 @@ pub enum Language {
 
 impl Language {
     /// Returns Accept-Language Header of Language Option
-    pub fn accept_language_header(&self) -> AcceptLanguage {
+    pub fn accept_language_header(&self) -> String {
         let language_tag = match *self {
             Language::en_US => langtag!(en;;;US),
             Language::en_GB => langtag!(en;;;GB),
@@ -72,7 +71,7 @@ impl Language {
             Language::da_DK => langtag!(da;;;DK),
             Language::it_IT => langtag!(it;;;IT),
         };
-        AcceptLanguage(vec![qitem(language_tag)])
+        language_tag.to_string()
     }
 
     /// Returns Description of Language Option

@@ -2,8 +2,7 @@
 
 use scraper::{Html, Selector, ElementRef};
 
-use models::{Movie, MovieBuilder};
-use models::TitleID;
+use crate::models::{Movie, MovieBuilder, TitleID};
 
 /// function to parse row fragment of top 250 movie html
 fn parse_row_fragment(fragment: &ElementRef) -> Movie {
