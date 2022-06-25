@@ -18,8 +18,8 @@ extern crate log;
 #[macro_use]
 extern crate derive_builder;
 // extern crate hyper;
-#[macro_use]
-extern crate language_tags;
+// #[macro_use]
+// extern crate language_tags;
 // extern crate reqwest;
 // extern crate scraper;
 // extern crate url;
