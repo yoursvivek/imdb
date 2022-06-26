@@ -97,6 +97,6 @@ impl fmt::Display for Language {
             Language::da_DK => "da-DK",
             Language::it_IT => "it-IT",
         };
-        write!(f, "{}", display.to_string())
+        write!(f, "{}", display)
     }
 }
