@@ -1,6 +1,6 @@
 //! Module for Parsing _Top 250 Movies_.
 
-use scraper::{Html, Selector, ElementRef};
+use scraper::{ElementRef, Html, Selector};
 
 use crate::models::{Movie, MovieBuilder, TitleID};
 
@@ -9,8 +9,7 @@ fn parse_row_fragment(fragment: &ElementRef) -> Movie {
     let mut movie = MovieBuilder::default();
 
     if let Some(div) = fragment
-        .select(&Selector::parse("tr > td.watchlistColumn > div.wlb_ribbon")
-            .unwrap())
+        .select(&Selector::parse("tr > td.watchlistColumn > div.wlb_ribbon").unwrap())
         .next()
     {
         if let Some(data) = div.value().attr("data-tconst") {
@@ -53,8 +52,7 @@ fn parse_row_fragment(fragment: &ElementRef) -> Movie {
     }
 
     if let Some(span) = fragment
-        .select(&Selector::parse("tr > td.titleColumn > span.secondaryInfo")
-            .unwrap())
+        .select(&Selector::parse("tr > td.titleColumn > span.secondaryInfo").unwrap())
         .next()
     {
         if let Some(text) = span.text().next() {
@@ -71,13 +69,12 @@ pub fn parse_top250_movies_html(html: &str) -> Vec<Movie> {
     let mut result = Vec::new();
     let document = Html::parse_document(html);
 
-    let selector = Selector::parse(
-        "#main > div > span > div > div > div.lister > table > tbody > tr",
-    ).unwrap();
+    let selector =
+        Selector::parse("#main > div > span > div > div > div.lister > table > tbody > tr")
+            .unwrap();
 
     for row in document.select(&selector) {
         result.push(parse_row_fragment(&row));
-
     }
     result
 }

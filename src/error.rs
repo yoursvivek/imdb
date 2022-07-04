@@ -1,8 +1,7 @@
+use reqwest;
 use std::error;
 use std::fmt;
 use std::io;
-use reqwest;
-
 
 /// Error type for `imdb`.
 ///

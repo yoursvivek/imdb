@@ -3,7 +3,6 @@
 //! # Example
 //!
 //! ```ignore,rust
-//! # extern crate imdb;
 //! use imdb::IMDb;
 //!
 //! imdb = IMDb::new();
@@ -13,22 +12,11 @@
 //! [IMDb]: http://www.imdb.com/
 
 #[macro_use]
-extern crate log;
-
-#[macro_use]
 extern crate derive_builder;
-// extern crate hyper;
-#[macro_use]
-extern crate language_tags;
-// extern crate reqwest;
-// extern crate scraper;
-// extern crate url;
 
 #[cfg(feature = "serde-impls")]
 #[macro_use]
 extern crate serde_derive;
-//#[cfg(feature = "serde-impls")]
-//extern crate serde;
 
 mod consts;
 mod parser;
@@ -39,10 +27,10 @@ mod language;
 
 pub mod models;
 
+pub use crate::imdb::IMDb;
 pub use error::Error;
 pub use language::Language;
 pub use models::Movie;
-pub use crate::imdb::IMDb;
 
 pub mod unstable {
     //! Unstable Internal APIs.

@@ -1,48 +1,62 @@
-#[macro_use]
-extern crate log;
-extern crate env_logger;
+use log::{info, warn};
 
-extern crate imdb;
-extern crate colored;
-extern crate terminal_size;
-
-use std::io::Read;
 use std::fs::File;
+use std::io::Read;
 use std::iter::Iterator;
 
-use terminal_size::{Width, Height, terminal_size};
 use colored::*;
+use terminal_size::{terminal_size, Height, Width};
 
-use crate::imdb::unstable::parser;
-use crate::imdb::{Movie, Language};
+use imdb::unstable::parser;
+use imdb::{Language, Movie};
+
+fn format_fields(
+    movie: &Movie,
+    max_title_length: usize,
+) -> (
+    ColoredString,
+    String,
+    ColoredString,
+    ColoredString,
+    ColoredString,
+) {
+    let id = format!("{}", movie.id).white();
+    let title = format!("{:width$}", movie.title.blue(), width = max_title_length);
+    let year = format!("{}", movie.year).yellow();
+    let rating = format!("{:.1}", movie.rating).green();
+    let votes = format!("{:7}", movie.votes).cyan();
+    (id, title, year, rating, votes)
+}
 
 fn print_one_line(movies: &[Movie], max_title_length: usize) {
     for (i, movie) in movies.iter().enumerate() {
-        println!("[{}] {} {} ({}) {} {} votes",
-            format!("{}", movie.id).white(),
-            format!("{:3}", i+1),
-            format!("{:width$}", movie.title.blue(), width=max_title_length),
-            format!("{}", movie.year).yellow(),
-            format!("{:.1}", movie.rating).green(),
-            format!("{:7}", movie.votes).cyan(),
+        let (id, title, year, rating, votes) = format_fields(&movie, max_title_length);
+        println!(
+            "[{}] {:3} {} ({}) {} {} votes",
+            id,
+            i + 1,
+            title,
+            year,
+            rating,
+            votes,
         );
     }
 }
 
 fn print_two_lines(movies: &[Movie], max_title_length: usize) {
     for (i, movie) in movies.iter().enumerate() {
-        println!("{} {} ({})",
-                 format!("{:3}", i+1).white(),
-                 format!("{:width$}", movie.title.blue(), width=max_title_length),
-                 format!("{}", movie.year).yellow(),
-        );
-        println!("{}",
-            format!("[{}] {:>width$} {} votes",
-                    format!("{}", movie.id),
-                    format!("{:.1}", movie.rating).green(),
-                    format!("{:7}", movie.votes).cyan(),
-                    width = max_title_length - 16,
-            ).on_black(),
+        let (id, title, year, rating, votes) = format_fields(&movie, max_title_length);
+        println!("{:3} {} ({})", i + 1, title, year,);
+        println!(
+            "{}",
+            format!(
+                "[{}] {:>width$} {} votes",
+                id,
+                rating,
+                votes,
+                width = max_title_length - 16,
+            )
+            .on_black(),
         );
     }
 }

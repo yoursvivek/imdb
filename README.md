@@ -19,7 +19,6 @@ imdb = "0.0.1"
 ## Example
 
 ```rust
-extern crate imdb;
 use imdb::IMDb;
 
 imdb = IMDb::new();

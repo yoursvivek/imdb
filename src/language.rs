@@ -64,12 +64,12 @@ impl Language {
     /// Returns Accept-Language Header of Language Option
     pub fn accept_language_header(&self) -> String {
         let language_tag = match *self {
-            Language::en_US => langtag!(en;;;US),
-            Language::en_GB => langtag!(en;;;GB),
-            Language::fr_FR => langtag!(fr;;;FR),
-            Language::de_DE => langtag!(de;;;DE),
-            Language::da_DK => langtag!(da;;;DK),
-            Language::it_IT => langtag!(it;;;IT),
+            Language::en_US => "en-US",
+            Language::en_GB => "en-GB",
+            Language::fr_FR => "fr-FR",
+            Language::de_DE => "de-DE",
+            Language::da_DK => "da-DK",
+            Language::it_IT => "it-IT",
         };
         language_tag.to_string()
     }
